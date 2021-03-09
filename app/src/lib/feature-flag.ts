@@ -155,3 +155,7 @@ export function enableUnhandledRejectionReporting(): boolean {
 export function enableCherryPicking(): boolean {
   return enableDevelopmentFeatures()
 }
+/** Should the LFS lock tools be enabled? */
+export function enableLFSFileLocking(): boolean {
+  return enableDevelopmentFeatures()
+}

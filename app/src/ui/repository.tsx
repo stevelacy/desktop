@@ -47,6 +47,7 @@ interface IRepositoryViewProps {
   readonly hideWhitespaceInDiff: boolean
   readonly showSideBySideDiff: boolean
   readonly askForConfirmationOnDiscardChanges: boolean
+  readonly isReleaseOwnedLocksOnCommit: boolean
   readonly focusCommitMessage: boolean
   readonly commitSpellcheckEnabled: boolean
   readonly accounts: ReadonlyArray<Account>
@@ -213,6 +214,9 @@ export class RepositoryView extends React.Component<
           this.props.currentTutorialStep === TutorialStep.MakeCommit
         }
         commitSpellcheckEnabled={this.props.commitSpellcheckEnabled}
+        isUsingLFS={this.props.state.isUsingLFS}
+        locks={this.props.state.locks}
+        lockingUser={this.props.state.lockingUser}
       />
     )
   }
@@ -406,6 +410,8 @@ export class RepositoryView extends React.Component<
               this.props.externalEditorLabel !== undefined
             }
             dispatcher={this.props.dispatcher}
+            isUsingLFS={this.props.state.isUsingLFS}
+            isReleaseOwnedLocksOnCommit={this.props.isReleaseOwnedLocksOnCommit}
           />
         )
       }
@@ -436,6 +442,8 @@ export class RepositoryView extends React.Component<
             this.props.askForConfirmationOnDiscardChanges
           }
           onDiffOptionsOpened={this.onDiffOptionsOpened}
+          locks={this.props.state.locks}
+          lockingUser={this.props.state.lockingUser}
         />
       )
     }

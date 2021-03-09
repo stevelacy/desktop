@@ -79,6 +79,9 @@ interface IChangesSidebarProps {
   readonly shouldNudgeToCommit: boolean
 
   readonly commitSpellcheckEnabled: boolean
+  readonly isUsingLFS: boolean
+  readonly locks: ReadonlyMap<string, string> | null
+  readonly lockingUser: string | null
 }
 
 export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
@@ -429,6 +432,10 @@ export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
           currentBranchProtected={currentBranchProtected}
           shouldNudgeToCommit={this.props.shouldNudgeToCommit}
           commitSpellcheckEnabled={this.props.commitSpellcheckEnabled}
+          isPushPullFetchInProgress={this.props.isPushPullFetchInProgress}
+          isUsingLFS={this.props.isUsingLFS}
+          locks={this.props.locks}
+          lockingUser={this.props.lockingUser}
         />
         {this.renderUndoCommit(rebaseConflictState)}
       </div>

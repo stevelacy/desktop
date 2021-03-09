@@ -22,7 +22,6 @@ interface IChangesProps {
   /** Whether a commit is in progress */
   readonly isCommitting: boolean
   readonly hideWhitespaceInDiff: boolean
-
   /**
    * Called when the user requests to open a binary file in an the
    * system-assigned application for said file type.
@@ -48,6 +47,9 @@ interface IChangesProps {
 
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void
+
+  readonly locks: ReadonlyMap<string, string> | null
+  readonly lockingUser: string | null
 }
 
 export class Changes extends React.Component<IChangesProps, {}> {
@@ -95,6 +97,12 @@ export class Changes extends React.Component<IChangesProps, {}> {
           showSideBySideDiff={this.props.showSideBySideDiff}
           onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
           onDiffOptionsOpened={this.props.onDiffOptionsOpened}
+          lockOwner={
+            this.props.locks == null
+              ? null
+              : this.props.locks.get(file.path) || null
+          }
+          lockingUser={this.props.lockingUser}
         />
         <SeamlessDiffSwitcher
           repository={this.props.repository}

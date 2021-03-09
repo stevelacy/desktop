@@ -20,6 +20,8 @@ interface IChangedFileDetailsProps {
 
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void
+  readonly lockOwner: string | null
+  readonly lockingUser: string | null
 }
 
 /** Displays information about a file */
@@ -35,6 +37,7 @@ export class ChangedFileDetails extends React.Component<
       <div className="header">
         <PathLabel path={this.props.path} status={this.props.status} />
         {this.renderDecorator()}
+        {this.renderLock()}
 
         {enableSideBySideDiffs() && (
           <DiffOptions
@@ -51,6 +54,25 @@ export class ChangedFileDetails extends React.Component<
         />
       </div>
     )
+  }
+
+  private renderLock() {
+    if (this.props.lockOwner != null) {
+      let tempClass = 'lock'
+      if (this.props.lockOwner === this.props.lockingUser) {
+        tempClass += ' lock-owned'
+      }
+
+      return (
+        <Octicon
+          symbol={OcticonSymbol.lock}
+          className={tempClass}
+          title={'Locked by: ' + this.props.lockOwner}
+        />
+      )
+    }
+
+    return null
   }
 
   private renderDecorator() {

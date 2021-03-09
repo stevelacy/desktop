@@ -188,5 +188,8 @@ function getInitialRepositoryState(): IRepositoryState {
       userHasResolvedConflicts: false,
       targetBranchUndoSha: null,
     },
+    isUsingLFS: false,
+    locks: null,
+    lockingUser: null,
   }
 }

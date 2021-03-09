@@ -66,10 +66,15 @@ import {
   getAllTags,
   deleteTag,
   MergeResult,
+  getDiffPaths,
   createBranch,
 } from '../git'
 import { GitError as DugiteError } from '../../lib/git'
 import { GitError } from 'dugite'
+import {
+  getFileLocks as getFileLocksRepo,
+  toggleFileLocks as toggleFileLocksRepo,
+} from '../git/lfs'
 import { RetryAction, RetryActionType } from '../../models/retry-actions'
 import { UpstreamAlreadyExistsError } from './upstream-already-exists-error'
 import { forceUnwrap } from '../fatal-error'
@@ -1087,6 +1092,55 @@ export class GitStore extends BaseStore {
         fetchRefspec(this.repository, account, remote, refspec)
       )
     }
+  }
+
+  /**
+   * Get all modified files between branches
+   *
+   * @param account - The user to use for authentication
+   */
+  public async getFileDiffs(
+    remote: string,
+    branch: string,
+    remoteBranch: string
+  ): Promise<ReadonlyArray<string> | undefined> {
+    return await this.performFailableOperation(() => {
+      return getDiffPaths(this.repository, remote, branch, remoteBranch)
+    })
+  }
+
+  /**
+   * Get LFS file locks
+   *
+   * @param account - The user to use for authentication
+   */
+  public async getFileLocks(
+    account: IGitAccount | null
+  ): Promise<ReadonlyMap<string, string> | undefined> {
+    return await this.performFailableOperation(() => {
+      return getFileLocksRepo(this.repository, account)
+    })
+  }
+
+  /**
+   * Toggle file locks
+   *
+   * @param locks - Existing locks
+   *
+   * @param account - The account to use when authenticating with the remote
+   *
+   * @param paths - File paths to lock/unlock
+   *
+   * @param isLocked - True if locked, false if unlocked
+   *
+   * @param isForced - True if forced
+   */
+  public async toggleFileLocks(
+    account: IGitAccount | null,
+    paths: ReadonlyArray<string>,
+    isLocked: boolean
+  ): Promise<void> {
+    return toggleFileLocksRepo(this.repository, account, paths, isLocked)
   }
 
   public async loadStatus(): Promise<IStatusResult | null> {
