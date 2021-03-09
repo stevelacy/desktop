@@ -224,7 +224,7 @@ import {
 } from './updates/changes-state'
 import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { BranchPruner } from './helpers/branch-pruner'
-import { enableUpdateRemoteUrl, enableLFSFileLocking } from '../feature-flag'
+import { enableUpdateRemoteUrl } from '../feature-flag'
 import { Banner, BannerType } from '../../models/banner'
 import moment from 'moment'
 import { isDarkModeEnabled } from '../../ui/lib/dark-theme'
@@ -1939,9 +1939,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.emitUpdate()
 
-    if (enableLFSFileLocking()) {
-      this.updateLFS(repository)
-    }
+    this.updateLFS(repository)
     this.updateChangesWorkingDirectoryDiff(repository)
 
     return status
