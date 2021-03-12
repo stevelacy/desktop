@@ -455,16 +455,19 @@ export class ChangesList extends React.Component<
       let tempOwner =
         this.props.locks == null ? null : this.props.locks.get(paths[0])
       if (tempOwner == null) {
+        const enabled = !this.props.isPushPullFetchInProgress
+        const suffix = enabled ? ' - Fetching latest locks...' : ''
+        const label = (__DARWIN__ ? 'Lock File' : 'Lock file') + suffix
         return [
           {
-            label: __DARWIN__ ? 'Lock File' : 'Lock file',
+            label,
             action: () =>
               this.props.dispatcher.toggleFileLocks(
                 this.props.repository,
                 paths,
                 true
               ),
-            enabled: !this.props.isPushPullFetchInProgress,
+            enabled,
           },
         ]
       }
